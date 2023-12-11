@@ -1,0 +1,76 @@
+---
+- name: Deploy OpenVPN server using Docker
+  hosts: all
+  become: yes
+
+  vars:
+    openvpn_data: "/etc/openvpn"  # Define the OpenVPN data directory
+    openvpn_port: "1194"  # Define the OpenVPN port
+    openvpn_protocol: "udp"  # Define the OpenVPN protocol
+    openvpn_container_name: "openvpn-server"
+
+  tasks:
+    - name: Install Docker prerequisites
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        update_cache: yes
+      when: ansible_facts.packages['docker-ce'] is not defined
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Install Docker Engine
+      apt:
+        name: docker-ce
+        update_cache: yes
+        state: latest
+
+    - name: Ensure OpenVPN data directory exists
+      file:
+        path: "{{ openvpn_data }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Pull OpenVPN Docker image
+      docker_image:
+        name: kylemanna/openvpn
+        source: pull
+
+    - name: Create and start OpenVPN container
+      docker_container:
+        name: "{{ openvpn_container_name }}"
+        image: kylemanna/openvpn
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ openvpn_port }}:{{ openvpn_port }}/{{ openvpn_protocol }}"
+        volumes:
+          - "{{ openvpn_data }}:/etc/openvpn"
+
+    - name: Initialize OpenVPN configuration
+      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+      args:
+        creates: "{{ openvpn_data }}/openvpn.conf"
+
+    - name: Initialize OpenVPN PKI
+      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+      args:
+        creates: "{{ openvpn_data }}/pki"
+
+    - name: Retrieve OpenVPN server information
+      debug:
+        msg: "OpenVPN server is running. Connect to it on port {{ openvpn_port }} over {{ openvpn_protocol }}."
