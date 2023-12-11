@@ -7,7 +7,7 @@
     openvpn_data: "/etc/openvpn"  # Define the OpenVPN data directory
     openvpn_port: "1194"  # Define the OpenVPN port
     openvpn_protocol: "udp"  # Define the OpenVPN protocol
-    openvpn_container_name: "openvpn-server"
+    openvpn_domain: "{{openvpn_domain}}"
 
   tasks:
     - name: Install Docker prerequisites
@@ -52,7 +52,7 @@
 
     - name: Create and start OpenVPN container
       docker_container:
-        name: "{{ openvpn_container_name }}"
+        name: openvpn-server
         image: kylemanna/openvpn
         state: started
         restart_policy: always
@@ -62,7 +62,7 @@
           - "{{ openvpn_data }}:/etc/openvpn"
 
     - name: Initialize OpenVPN configuration
-      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
       args:
         creates: "{{ openvpn_data }}/openvpn.conf"
 
