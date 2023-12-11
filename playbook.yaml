@@ -8,9 +8,7 @@
     openvpn_port: "1194"  # Define the OpenVPN port
     openvpn_protocol: "udp"  # Define the OpenVPN protocol
     openvpn_domain: "{{openvpn_domain}}"
-
-  tasks:
-    - name: Install Docker prerequisites
+    - name: Install general prerequisites
       apt:
         name:
           - apt-transport-https
@@ -18,6 +16,8 @@
           - curl
           - gnupg-agent
           - software-properties-common
+          - python3
+          - python3-pip
         update_cache: yes
       when: ansible_facts.packages['docker-ce'] is not defined
 
@@ -36,6 +36,12 @@
         name: docker-ce
         update_cache: yes
         state: latest
+
+    - name: Ensure Python Docker SDK is installed
+      pip:
+        name: docker
+        state: present
+
 
     - name: Ensure OpenVPN data directory exists
       file:
