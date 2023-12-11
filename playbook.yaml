@@ -7,7 +7,9 @@
     openvpn_data: "/etc/openvpn"  # Define the OpenVPN data directory
     openvpn_port: "1194"  # Define the OpenVPN port
     openvpn_protocol: "udp"  # Define the OpenVPN protocol
-    openvpn_domain: "{{openvpn_domain}}"
+    openvpn_domain: "{{ openvpn_domain }}"
+  
+  tasks:
     - name: Install general prerequisites
       apt:
         name:
@@ -19,7 +21,6 @@
           - python3
           - python3-pip
         update_cache: yes
-      when: ansible_facts.packages['docker-ce'] is not defined
 
     - name: Add Docker’s official GPG key
       apt_key:
