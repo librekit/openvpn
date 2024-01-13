@@ -62,6 +62,7 @@
         name: openvpn-server
         image: kylemanna/openvpn
         state: started
+        privileged: true
         restart_policy: always
         ports:
           - "{{ openvpn_port }}:{{ openvpn_port }}/{{ openvpn_protocol }}"
