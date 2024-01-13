@@ -85,11 +85,6 @@
         responses:
           'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
           'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
-          'Enter pass phrase for /etc/openvpn/pki/private/ca.key:': 'YourSecurePassphrase'
-          'Common Name (eg: your user, host, or server name) [Easy-RSA CA]:': '{{openvpn_domain}}'
-
-          'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
-          'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
           'Enter pass phrase for.*:': 'YourSecurePassphrase'
           'Common Name.*:':  '{{openvpn_domain}}'
       no_log: false
