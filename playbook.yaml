@@ -83,6 +83,17 @@
       args:
         creates: "{{ openvpn_data }}/pki"
 
+    - name: Initialize OpenVPN PKI
+      expect:
+        command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+        responses:
+          'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
+          'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
+          'Enter pass phrase for /etc/openvpn/pki/private/ca.key:': 'YourSecurePassphrase'
+          'Common Name (eg: your user, host, or server name) [Easy-RSA CA]:': '{{openvpn_domain}}'
+      no_log: true
+
+
     - name: Retrieve OpenVPN server information
       debug:
         msg: "OpenVPN server is running. Connect to it on port {{ openvpn_port }} over {{ openvpn_protocol }}."
