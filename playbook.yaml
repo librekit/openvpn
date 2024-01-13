@@ -105,9 +105,9 @@
       expect:
         command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full user1
         responses:
-          'Enter pass phrase for.*:': 'YourSecurePassphrase'
           'Enter PEM pass phrase:': 'YourSecurePassphrase'
           'Verifying - Enter PEM pass phrase:': 'YourSecurePassphrase'
+          'Enter pass phrase for.*:': 'YourSecurePassphrase'
       no_log: true  # Set this to true to avoid exposing sensitive information in logs
 
 
