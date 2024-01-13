@@ -69,9 +69,9 @@
         volumes:
           - "{{ openvpn_data }}:/etc/openvpn
         sysctls:
-          net.ipv6.conf.all.disable_ipv6: "0"
-          net.ipv6.conf.default.forwarding: "1"
-          net.ipv6.conf.all.forwarding: "1"
+          - net.ipv6.conf.all.disable_ipv6: "0"
+          - net.ipv6.conf.default.forwarding: "1"
+          - net.ipv6.conf.all.forwarding: "1"
 
     - name: Initialize OpenVPN configuration
       command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
