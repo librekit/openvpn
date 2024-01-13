@@ -62,7 +62,7 @@
 
     - name: Initialize OpenVPN PKI
       expect:
-        command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+        command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki nopass
         responses:
           'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
           'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
