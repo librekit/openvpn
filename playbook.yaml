@@ -58,7 +58,7 @@
         source: pull
         
     - name: Generate OpenVPN configuration
-      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
+      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
 
     - name: Initialize OpenVPN PKI
       expect:
