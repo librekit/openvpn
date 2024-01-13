@@ -95,8 +95,12 @@
         creates: "{{ openvpn_data }}/openvpn.conf"
 
     - name: Generate OpenVPN Client Configuration for user1
-      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn easyrsa build-client-full user1 nopass
-      register: gen_client_conf
+      expect:
+        command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn easyrsa build-client-full user1
+        responses:
+          'Enter pass phrase for.*:': 'YourSecurePassphrase'
+      no_log: false  # Set this to true to avoid exposing sensitive information in logs
+
     
     - name: Copy OpenVPN Client Configuration for user1 to Control Machine
       command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient user1
