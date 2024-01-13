@@ -69,6 +69,8 @@
           'Enter pass phrase for.*:': 'YourSecurePassphrase'
           'Common Name.*:':  '{{openvpn_domain}}'
       no_log: false
+      async: 1200  # Run the task asynchronously for up to 1200 seconds (20 minutes)
+      poll: 0  # Check back on the task's status later
       
 
     - name: Create and start OpenVPN container
