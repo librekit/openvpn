@@ -92,8 +92,17 @@
       args:
         creates: "{{ openvpn_data }}/openvpn.conf"
 
-
-
+    - name: Generate OpenVPN Client Configuration for user1
+      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn easyrsa build-client-full user1 nopass
+      register: gen_client_conf
+    
+    - name: Copy OpenVPN Client Configuration for user1 to Control Machine
+      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient user1
+      register: client_conf
+    
+    - name: Display config for user1
+      debug:
+        msg: "{{ client_conf.stdout }}"
 
 
     - name: Retrieve OpenVPN server information
