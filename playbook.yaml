@@ -64,9 +64,6 @@
       expect:
         command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki nopass
         responses:
-          'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
-          'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
-          'Enter pass phrase for.*:': 'YourSecurePassphrase'
           'Common Name.*:':  '{{openvpn_domain}}'
       no_log: false
       async: 1200  # Run the task asynchronously for up to 1200 seconds (20 minutes)
@@ -89,32 +86,11 @@
           net.ipv6.conf.default.forwarding: "1"
           net.ipv6.conf.all.forwarding: "1"
 
-    - name: Initialize OpenVPN configuration
-      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
-      args:
-        creates: "{{ openvpn_data }}/openvpn.conf"
+
 
     - name: Generate OpenVPN Client Configuration for user1
-      expect:
-        command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn easyrsa build-client-full user1
-        responses:
-          'Enter pass phrase for.*:': 'YourSecurePassphrase'
-      no_log: false  # Set this to true to avoid exposing sensitive information in logs
+      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn easyrsa build-client-full user1
 
-    - name: Generate OpenVPN Client Configuration for user1 with passphrase
-      expect:
-        command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full user1
-        responses:
-          'Enter PEM pass phrase:': 'YourSecurePassphrase'
-          'Verifying - Enter PEM pass phrase:': 'YourSecurePassphrase'
-          'Enter pass phrase for.*:': 'YourSecurePassphrase'
-      no_log: true  # Set this to true to avoid exposing sensitive information in logs
-
-
-    
-    - name: Copy OpenVPN Client Configuration for user1 to Control Machine
-      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient user1
-      register: client_conf
     
     - name: Display config for user1
       debug:
