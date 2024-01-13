@@ -74,7 +74,7 @@
         creates: "{{ openvpn_data }}/openvpn.conf"
 
     - name: Initialize OpenVPN PKI
-      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_initpki
       args:
         creates: "{{ openvpn_data }}/pki"
 
