@@ -57,6 +57,17 @@
         name: kylemanna/openvpn
         source: pull
 
+    - name: Initialize OpenVPN PKI
+      expect:
+        command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+        responses:
+          'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
+          'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
+          'Enter pass phrase for.*:': 'YourSecurePassphrase'
+          'Common Name.*:':  '{{openvpn_domain}}'
+      no_log: false
+      
+
     - name: Create and start OpenVPN container
       docker_container:
         name: openvpn-server
@@ -79,15 +90,7 @@
         creates: "{{ openvpn_data }}/openvpn.conf"
 
 
-    - name: Initialize OpenVPN PKI
-      expect:
-        command: docker run -v /etc/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
-        responses:
-          'Enter New CA Key Passphrase:': 'YourSecurePassphrase'
-          'Re-Enter New CA Key Passphrase:': 'YourSecurePassphrase'
-          'Enter pass phrase for.*:': 'YourSecurePassphrase'
-          'Common Name.*:':  '{{openvpn_domain}}'
-      no_log: false
+
 
 
     - name: Retrieve OpenVPN server information
