@@ -78,10 +78,6 @@
       args:
         creates: "{{ openvpn_data }}/openvpn.conf"
 
-    - name: Initialize OpenVPN PKI
-      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_initpki
-      args:
-        creates: "{{ openvpn_data }}/pki"
 
     - name: Initialize OpenVPN PKI
       expect:
