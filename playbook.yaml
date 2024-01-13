@@ -46,7 +46,7 @@
 
     - name: Ensure OpenVPN data directory exists
       file:
-        path: "{{ openvpn_data }}"
+        path: "/etc/openvpn"
         state: directory
         owner: root
         group: root
@@ -81,14 +81,14 @@
         ports:
           - "{{ openvpn_port }}:{{ openvpn_port }}/{{ openvpn_protocol }}"
         volumes:
-          - "{{ openvpn_data }}:/etc/openvpn"
+          - "/etc/openvpn:/etc/openvpn"
         sysctls:
           net.ipv6.conf.all.disable_ipv6: "0"
           net.ipv6.conf.default.forwarding: "1"
           net.ipv6.conf.all.forwarding: "1"
 
     - name: Initialize OpenVPN configuration
-      command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
+      command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
       args:
         creates: "{{ openvpn_data }}/openvpn.conf"
 
