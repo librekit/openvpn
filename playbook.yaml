@@ -94,7 +94,7 @@
 
     - name: Display config for user1
       debug:
-        msg: "{{ client_conf.stdout }}"
+        msg: "{{ client_ovpn.stdout }}"
 
 
     - name: Retrieve OpenVPN server information
