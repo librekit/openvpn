@@ -59,8 +59,6 @@
         
     - name: Generate OpenVPN configuration
       command: docker run -v {{ openvpn_data }}:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://{{openvpn_domain}}
-      args:
-        creates: "{{ openvpn_data }}/ovpn_env.sh"
 
     - name: Initialize OpenVPN PKI
       expect:
