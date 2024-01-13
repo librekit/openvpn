@@ -89,6 +89,8 @@
 
     - name: Generate OpenVPN Client Configuration for user1 without passphrase
       command: docker run -v /etc/openvpn:/etc/openvpn --rm kylemanna/openvpn easyrsa build-client-full user1 nopass
+      register: client_ovpn
+
 
     - name: Display config for user1
       debug:
